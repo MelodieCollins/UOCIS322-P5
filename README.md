@@ -1,25 +1,47 @@
 # UOCIS322 - Project 5 #
-Brevet time calculator with AJAX and MongoDB!
 
-## Overview
+## Brevet Controle Time Calculation Rules
 
-Store control times from Project 4 in a MongoDB database.
+Acording to rusa.org:
 
-### What is in this repository
+Overall time limits vary for each brevet according to the distance. 
+These are: (in hours and minutes, HH:MM) 13:30 for 200 KM, 20:00 for 300 KM, 
+27:00 for 400 KM, 40:00 for 600 KM, and 75:00 for 1000 KM. A rider’s total elapsed 
+time is calculated from the opening time of the start control (regardless of the rider’s
+actual start time) to the rider’s arrival time at the finish control. Additionally, 
+riders must arrive at each checkpoint between the opening and closing time for the 
+checkpoint. These times are noted on the brevet card with the information for the 
+checkpoints.
 
-You have a minimal example of `docker-compose` in `DockerMongo`, using which you can connect a Flask app to MongoDB (as demonstrated in class). Refer to the lecture slides for more details on MongoDB and `docker-compose`. Solved `acp_times.py` file will be made available on Canvas under Files after the project due date.
+The table below gives the minimum and maximum speeds for ACP brevets.
 
-## IMPORTANT NOTES
+Control location (km): 0-200, 200-400, 400-600, 600-1000, 1000-1300	
 
-**MAKE SURE TO USE THE SOLUTION `acp_times.py` from Canvas for this project!**
+Minimum Speed (km/hr): 15,    15,      15,      11.428,   13.333
 
-**MAKE SURE TO KEEP YOUR FILES in `brevets`! REMOVE `DockerMongo` after you're done!**
+Maximum Speed (km/hr): 34,    32,      30,      28,       26
 
-## Getting started
+The calculation of a control's opening time is based on the maximum speed. Calculation of a control's closing time is based on the minimum speed.
 
-You will reuse *your* code from Project 4 (and the solution `acp_times.py` file for consistency), meaning you will get rid of `DockerMongo` (it's just an example, like `minijax` in Project 3), and use ideas from it to make some changes.
 
-Recall that you created a list of open and close control times using AJAX. In this project, you will add the following:
+Distance, Speed, and Time Calculation:
+
+When a distance in kilometers is divided by a speed in kilometers per hour, the result is a time measured in hours. For example, a distance of 100 km divided by a speed of 15 km per hour results in a time of 6.666666... hours. To convert that figure into hours and minutes, subtract the whole number of hours (6) and multiply the resulting fractional part by 60. The result is 6 hours, 40 minutes, expressed here as 6H40.
+
+If the control distance in kilometers is greater than the nominal distance of the brevet and if the control distance in kilometers is smaller than or equal to 120% of the nominal distance of the brevet, then the control distance in kilometers is equal to the nominal distance of the brevet. Otherwise, the control distance is too big.
+      
+If the control distance in kilometers is equal to the nominal distance of the brevet then:
+200 kilometres (120 mi) – 13.5 hours (15 km/h)
+300 kilometres (190 mi) – 20 hours (15 km/h)
+400 kilometres (250 mi) – 27 hours (15 km/h)
+600 kilometres (370 mi) – 40 hours (15 km/h)
+1,000 kilometres (620 mi) – 75 hours (13.3 km/h)
+
+For controls beyond the first 200km, the maximum speed decreases. Here the calculation is more difficult. Consider a control at 350km. We have 200/34 + 150/32 = 5H53 + 4H41 = 10H34. The 200/34 gives us the minimum time to complete the first 200km while the 150/32 gives us the minimum time to complete the next 150km. The sum gives us the control's opening time.
+
+
+Some Oddities include: 
+The maximum time limit for a control within the first 60km is based on 20 km/hr, plus 1 hour.
 
 1. Add two buttons `Submit` and `Display` in the ACP calculator page.
 
@@ -27,55 +49,16 @@ Recall that you created a list of open and close control times using AJAX. In th
 
 3. Upon clicking the `Display` button, the entries from the database should be displayed in a new page.
 
-Handle error cases appropriately. For example, Submit should return an error if no control times are input. One can imagine many such cases: you'll come up with as many cases as possible.
 
-## Tasks
+## Author
 
-As always you'll turn in your `credentials.ini` using Canvas, which will point to your repository on GitHub, which should contain:
+Melodie Collins, mcolli11@uoregon.edu
 
-* `Dockerfile`
 
-* `docker-compose.yml`
+## Date
 
-* The working application.
+May 23, 2021
 
-* A README.md file that includes not only identifying information (your name) but but also a revised, clear specification of the brevet control time calculation rules (you were supposed to do this for Project 4), with additional information regarding this project.
-
-* An automated `nose` test suite with at least 2 test cases: at least one for the time calculator, and another for DB insertion and retrieval.
-
-## Grading Rubric
-
-* If your code works as expected: 100 points. This includes:
-	* Front-end implementation (`Submit` and `Display`).
-	
-	* Back-end implementation (Connecting to MongoDB, insertion and selection).
-	
-	* AJAX interaction between the frontend and backend (AJAX for `Submit` and `Display`).
-	
-	* Updating `README` with a clear specification (including details from Project 4).
-	
-	* Writing at least 2 correct tests using nose (put them in `tests`, follow Project 3 if necessary), and all should pass.
-
-* If the AJAX logic is not working, **10** points will be docked off. 
-
-* If the logic to insert into or retrieve from the database is wrong, **30** points will be docked off.
-
-* If the README is not clear or missing, up to **15** points will be docked off. 
-
-* If any of the two test cases are incorrect or fail, up to **15** points will be docked off. 
-
-* If none of the functionalities work, 30 points will be given assuming 
-    * The `credentials.ini` is submitted with the correct URL of your repo, and
-    * `Dockerfile` is present 
-    * `docker-compose.yml` works/builds without any errors 
-
-* If none of the functionalities work, 30 points will be given assuming `credentials.ini` is submitted with the correct URL of your repo, `Dockerfile` builds and runs without any errors, and `docker-compose.yml` is correct and works.
-
-* If `docker-compose.yml` is missing, doesn't build or doesn't run, 10 points will be docked off.
-    
-* If `Dockerfile` is missing, doesn't build or doesn't run, 10 points will be docked off.
-	
-* If `credentials.ini` is not submitted or the repo is not found, 0 will be assigned.
 
 ## Credits
 
