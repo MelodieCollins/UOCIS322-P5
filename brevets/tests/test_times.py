@@ -5,9 +5,12 @@ We cannot test for randomness here (no effective oracle),
 but we can test that the elements in the returned string
 are correct.
 """
+# from flask_brevets.py import *
 from acp_times import *
+# import os
 import arrow
 import nose    # Testing framework
+# from pymongo import MongoClient
 
 FORMAT = 'YYYY-MM-DDTHH:mm'
 
@@ -40,6 +43,13 @@ def test_open_890km():
 def test_close_890km():
 	got = close_time(890, 1000, start).format(FORMAT)
 	assert got == '2021-01-03T17:23', '%s does not match' % got
+
+# def test_db():
+# client = MongoClient('mongodb://' + os.environ['MONGODB_HOSTNAME'], 27017)
+# db = client.tododb
+# db.tododb.insert_one('20')
+# items = list(db.tododb.find())
+# assert items[0] == '20'
 
 if __name__ == "__main__":
     nose.main()
